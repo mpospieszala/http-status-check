@@ -25,5 +25,5 @@ def checkStatusCode():
 gen = checkStatusCode()
 
 with open('output.csv', 'wb') as f:
-    writer = csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\n', lineterminator = '\n') #TODO: Zlikwidować potrójne entery
+    writer = csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\n', lineterminator = '\n') #TODO: Remove triple newlines
     writer.writerows(gen)
