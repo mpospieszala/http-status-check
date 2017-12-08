@@ -1,29 +1,22 @@
-# coding:utf-8
-__author__ = 'Magdum'
+#coding: utf-8
 
-import urllib
-import csv
+from bs4 import BeautifulSoup
+import requests
+import os
 
-def openFile():
-    urlArray = []
-    openF = open('URLlist.txt', 'r')
-    for line in openF:
-        urlArray.append(line)
-    return urlArray
+urls = []
+headers = {"User-Agent":"Mozilla/5.0"}
 
-def checkStatusCode():
-    urls = openFile()
-    for url in urls:
-        try:
-            a = urllib.urlopen(url)
-        except IOError:
-            print 'Error', url
-        else:
-            yield a.getcode(), url
+if os.path.isfile('url-list.txt'):
+    with open('url-list.txt') as f:
+        for line in f:
+            urls.append(line)
+else:
+    print 'No "url-list.txt" file found. Create file "url-list.txt" to run the program'
 
-
-gen = checkStatusCode()
-
-with open('output.csv', 'wb') as f:
-    writer = csv.writer(f, quoting=csv.QUOTE_NONE, escapechar = '\n', lineterminator = '\n') #TODO: Remove triple newlines
-    writer.writerows(gen)
+for url in urls:
+    html = requests.get(url.strip(), allow_redirects=False, headers=headers)
+    if html.status_code != 200:
+        print html.url,'\t', html.status_code
+    else:
+        print html.url, '\t', html.status_code
